@@ -1,0 +1,3 @@
+type Query {
+    searchRecipes(keyword: String!): [String]
+}
