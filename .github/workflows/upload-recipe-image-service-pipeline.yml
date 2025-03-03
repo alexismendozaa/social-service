@@ -1,4 +1,4 @@
-name: upload-recipe-image-service CI/CD
+name: upload-recipe-image-microservice CI/CD
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t upload-recipe-image-service:latest .
+          docker build -t upload-recipe-image-microservice:latest .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -55,8 +55,8 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker tag upload-recipe-image-service:latest ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-service:latest
-          docker push ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-service:latest
+          docker tag upload-recipe-image-microservice:latest ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-microservice:latest
+          docker push ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-microservice:latest
 
   deploy:
     needs: docker-build
@@ -70,7 +70,7 @@ jobs:
           username: ${{{{ secrets.SERVER_USER }}}}
           key: ${{{{ secrets.SERVER_SSH_KEY }}}}
           script: |
-            docker pull ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-service:latest
-            docker stop upload-recipe-image-service || true
-            docker rm upload-recipe-image-service || true
-            docker run -d --name upload-recipe-image-service -p 8080:8080 ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-service:latest
+            docker pull ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-microservice:latest
+            docker stop upload-recipe-image-microservice || true
+            docker rm upload-recipe-image-microservice || true
+            docker run -d --name upload-recipe-image-microservice -p 8080:8080 ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/upload-recipe-image-microservice:latest

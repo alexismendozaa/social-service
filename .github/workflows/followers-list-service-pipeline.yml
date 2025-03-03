@@ -1,4 +1,4 @@
-name: followers-list-service CI/CD
+name: followers-list-microservice CI/CD
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t followers-list-service:latest .
+          docker build -t followers-list-microservice:latest .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -55,8 +55,8 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker tag followers-list-service:latest ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-service:latest
-          docker push ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-service:latest
+          docker tag followers-list-microservice:latest ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-microservice:latest
+          docker push ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-microservice:latest
 
   deploy:
     needs: docker-build
@@ -70,7 +70,7 @@ jobs:
           username: ${{{{ secrets.SERVER_USER }}}}
           key: ${{{{ secrets.SERVER_SSH_KEY }}}}
           script: |
-            docker pull ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-service:latest
-            docker stop followers-list-service || true
-            docker rm followers-list-service || true
-            docker run -d --name followers-list-service -p 8080:8080 ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-service:latest
+            docker pull ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-microservice:latest
+            docker stop followers-list-microservice || true
+            docker rm followers-list-microservice || true
+            docker run -d --name followers-list-microservice -p 8080:8080 ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/followers-list-microservice:latest

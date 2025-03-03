@@ -1,4 +1,4 @@
-name: delete-recipe-image-service CI/CD
+name: delete-recipe-image-microservice CI/CD
 
 on:
   push:
@@ -55,8 +55,8 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker tag delete-recipe-image-service:latest ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-service:latest
-          docker push ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-service:latest
+          docker tag delete-recipe-image-microservice:latest ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-microservice:latest
+          docker push ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-microservice:latest
 
   deploy:
     needs: docker-build
@@ -70,7 +70,7 @@ jobs:
           username: ${{{{ secrets.SERVER_USER }}}}
           key: ${{{{ secrets.SERVER_SSH_KEY }}}}
           script: |
-            docker pull ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-service:latest
-            docker stop delete-recipe-image-service || true
-            docker rm delete-recipe-image-service || true
-            docker run -d --name delete-recipe-image-service -p 8080:8080 ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-service:latest
+            docker pull ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-microservice:latest
+            docker stop delete-recipe-image-microservice || true
+            docker rm delete-recipe-image-microservice || true
+            docker run -d --name delete-recipe-image-microservice -p 8080:8080 ${{{{ secrets.DOCKER_HUB_USERNAME }}}}/delete-recipe-image-microservice:latest
